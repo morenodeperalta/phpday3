@@ -5,11 +5,11 @@ if( isset($_SESSION['user'])!="" ){
  header("Location: home.php" ); // redirects to home.php
 }
 include_once 'dbconnect.php';
-$error = false;
-
 // in this MEGA IF STATEMENT you can put all the keys in order to make the page to comunicate the commands. 
-if ( isset($_POST['btn-signup']) ) {
  
+if ( isset($_POST['btn-signup']) ) {
+ $error = false;
+
  // sanitize user input to prevent sql injection
  $name = trim($_POST['name']);
   //trim - strips whitespace (or other characters) from the beginning and end of a string
@@ -65,43 +65,39 @@ $dateOfBirth = trim($_POST['dateOfBirth']);
   if (empty($pass)){
   $error = true;
   $passError = "Please enter password.";
- } else if(strlen($pass) < 6) {
+ } elseif(strlen($pass) < 6) {
   $error = true;
   $passError = "Password must have atleast 6 characters." ;
  }
 
 
 // Date of birth Validator
-  if (empty($dateOfBirthError)){
-  $error = true;
-  $dateOfBirthErrorError = "Please enter Date Of Birth.";
- } 
+
 
 // phone numer validator 
   if (empty($phonenumber)){
   $error = true;
   $phonenumberError = "Please enter phonenumber.";
- } else if(strlen($phonenumber) < 12) {
+ } else if(strlen($phonenumber) < 3) {
   $error = true;
-  $phonenumberError = "Phone number must have atleast 12 characters." ;
+  $phonenumberError = "Phone number must have atleast 3 characters." ;
  }
 
 
  // password hashing for security
 $password = hash('sha256' , $pass);
 
-
  // if there's no error, continue to signup
  if( !$error ) {
   
-  $query = "INSERT INTO users(userName,userEmail,userPass,dateOfBirth, phonenumber) VALUES('$name','$email','$password', '$dateOfBirth', '$phonenumber')";
+  echo $query = "INSERT INTO users(userName,userEmail,userPass,dateOfBirth, phonenumber) VALUES('$name','$email','$password', '$dateOfBirth', $phonenumber)";
   $res = mysqli_query($conn, $query);
   
   if ($res) {
    $errTyp = "success";
    $errMSG = "Successfully registered, you may login now";
    unset($name);
-    unset($email);
+  unset($email);
    unset($pass);
    unset($dateOfBirth);
    unset($phonenumber);
@@ -157,12 +153,12 @@ $password = hash('sha256' , $pass);
       
             
         
-            <input   type = "password"   name = "pass"   class = "form-control"   placeholder = "Enter Password"   maxlength = "15"  />
+            <input   type = "password"   name = "pass"   class = "form-control"   placeholder = "Enter Password"   maxlength = "15" value="<?= $pass ?>" />
             
                <span   class = "text-danger" > <?php   echo  $passError; ?> </span >
 
 
-            <input type ="date"  name="dateOfBirth"  class ="form-control"  placeholder ="Enter your Birth date"  maxlength ="50"   value = "<?php echo $dateOfBirth ?>"  />
+            <input type ="date"  name="dateOfBirth"  class ="form-control"  placeholder ="Enter your Birth date"  maxlength ="50"   value = "<?php echo $dateOfBirth ?>" />
       
                <span   class = "text-danger" > <?php   echo  $dateOfBirthError; ?> </span >
 
